@@ -3,12 +3,30 @@ function MultiBox(properties) {
 	this.instance = $instances;
 	$instances++;
 
-	this.name = properties.name || "multiBox-" + this.instance;
-	this.cssClasses = properties.cssClasses || "";
-	this.items = properties.items || [];
+	this.name = (typeof properties.name != 'undefined') ? properties.name : "multiBox-" + this.instance;
+	this.cssClasses = (typeof properties.cssClasses != 'undefined') ? properties.cssClasses : "";
+	this.items = (typeof properties.items != 'undefined') ? properties.items : [];
+	this.duplicateAllowed = (typeof properties.duplicateAllowed != 'undefined') ? properties.duplicateAllowed : false;
+	this.trim = (typeof properties.trim != 'undefined') ? properties.trim : true;
 
 	this.addItem = function(item) {
-		this.items.push(item);
+		if (this.duplicateAllowed) {
+			this.items.push(item);
+			return true;
+		} else {
+			var duplicateFound = false;
+			for (var i = 0; i < this.items.length; i++) {
+				if (this.items[i] === item) {
+					duplicateFound = true;
+				}
+			}
+			if (!duplicateFound) {
+				this.items.push(item);
+				return true;
+			} else {
+				return false;
+			}
+		}
 	};
 
 	this.removeItemByIndex = function(index) {
@@ -33,7 +51,7 @@ function MultiBox(properties) {
 			var itemText = $('<span>'+this.items[i]+'</span>');
 			itemText.appendTo(item);
 			var removeButton = $('<button type="button" class="pull-right btn btn-danger btn-xs" data-item-id="'+i+'">-</button>');
-			removeButton.appendTo(item);
+			removeButton.appendTo(item); 
 			removeButton.click(function(event) {
 				_this.removeItemByIndex(parseInt($(event.target).attr('data-item-id')));
 				_this.generate();
@@ -54,8 +72,13 @@ function MultiBox(properties) {
 		addButton.appendTo(inputGroupAddon);
 
 		var addItemToList = function() {
-			_this.addItem(input.val());
-			_this.generate();
+			var item = input.val();
+			if(_this.trim) {
+				item = item.trim();
+			}
+			if (_this.addItem(item)) {
+				_this.generate();
+			}
 		};
 
 		addButton.click(addItemToList);
