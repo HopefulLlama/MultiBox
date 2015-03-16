@@ -1,5 +1,9 @@
 var $instances = 0;
 function MultiBox(properties) {
+	MultiBox.escapeHTML = function(str) {
+    	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+	};
+
 	this.instance = $instances;
 	$instances++;
 
@@ -7,6 +11,7 @@ function MultiBox(properties) {
 	this.cssClasses = (typeof properties.cssClasses != 'undefined') ? properties.cssClasses : "";
 	this.items = (typeof properties.items != 'undefined') ? properties.items : [];
 	this.duplicateAllowed = (typeof properties.duplicateAllowed != 'undefined') ? properties.duplicateAllowed : false;
+	this.htmlAllowed = (typeof properties.htmlAllowed != 'undefined') ? properties.htmlAllowed : false;
 	this.trim = (typeof properties.trim != 'undefined') ? properties.trim : true;
 
 	this.addItem = function(item) {
@@ -72,7 +77,11 @@ function MultiBox(properties) {
 		addButton.appendTo(inputGroupAddon);
 
 		var addItemToList = function() {
-			var item = input.val();
+			if(_this.htmlAllowed) {
+				var item = input.val();
+			} else {
+				var item = MultiBox.escapeHTML(input.val());
+			}
 			if(_this.trim) {
 				item = item.trim();
 			}
