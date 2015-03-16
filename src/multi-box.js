@@ -1,21 +1,11 @@
 var $instances = 0;
-function MultiBox(name, cssClasses, items) {
+function MultiBox(properties) {
 	this.instance = $instances;
 	$instances++;
-	this.name = "multiBox-" + this.instance;
-	if (typeof name != 'undefined') {
-		this.name = name;
-	}
 
-	this.cssClasses = "";
-	if (typeof cssClasses != 'undefined') {
-		this.cssClasses = cssClasses;
-	}
-
-	this.items = [];
-	if (typeof items != 'undefined') {
-		this.items = items;
-	}
+	this.name = properties.name || "multiBox-" + this.instance;
+	this.cssClasses = properties.cssClasses || "";
+	this.items = properties.items || [];
 
 	this.addItem = function(item) {
 		this.items.push(item);
@@ -32,7 +22,7 @@ function MultiBox(name, cssClasses, items) {
 		var container = $("#"+this.name);
 		container.empty();
 		
-		container.addClass("panel panel-default");
+		container.addClass("panel panel-default " + this.cssClasses);
 		var panel = $('<div class="panel-body">');
 		panel.appendTo(container);
 		
