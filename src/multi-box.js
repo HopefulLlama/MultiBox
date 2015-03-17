@@ -49,9 +49,9 @@ function MultiBox(properties) {
 		var panel = $('<div class="panel-body">');
 		panel.appendTo(container);
 		
-		var listOfItemsDiv = $('<div id="list-of-items-'+this.instance+'">');
+		var listOfItemsDiv = $('<div id="list-of-items-'+this.instance+'" class="row">');
 		for (var i = 0; i < this.items.length; i++) {
-			var item = $('<div class="col-xs-12">');
+			var item = $('<div class="col-xs-12" style="margin-bottom: 5px">');
 			item.appendTo(listOfItemsDiv);
 			var itemText = $('<span>'+this.items[i]+'</span>');
 			itemText.appendTo(item);
@@ -63,6 +63,12 @@ function MultiBox(properties) {
 			});
 		}
 		listOfItemsDiv.appendTo(panel);
+		var clearButton = $('<button type="button" class="btn btn-warning pull-right">Clear All</button>');
+		clearButton.appendTo(panel);
+		clearButton.click(function(event) {
+			_this.items = [];
+			_this.generate();
+		});
 
 		var footer = $('<div class="panel-footer">');
 		footer.appendTo(container);
