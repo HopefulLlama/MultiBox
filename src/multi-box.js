@@ -12,9 +12,21 @@ function MultiBox(properties) {
 	this.items = (typeof properties.items != 'undefined') ? properties.items : [];
 	this.duplicateAllowed = (typeof properties.duplicateAllowed != 'undefined') ? properties.duplicateAllowed : false;
 	this.htmlAllowed = (typeof properties.htmlAllowed != 'undefined') ? properties.htmlAllowed : false;
+	this.blankItemAllowed = (typeof properties.blankItemAllowed != 'undefined') ? properties.blankItemAllowed : false;
 	this.trim = (typeof properties.trim != 'undefined') ? properties.trim : true;
 
 	this.addItem = function(item) {
+		if(!this.blankItemAllowed) {
+			if(item.trim() === "") {
+				return false;
+			}
+		}
+		if(!this.htmlAllowed) {
+			item = MultiBox.escapeHTML(input.val());
+		}
+		if(this.trim) {
+			item = item.trim();
+		}
 		if (this.duplicateAllowed) {
 			this.items.push(item);
 			return true;
@@ -83,15 +95,7 @@ function MultiBox(properties) {
 		addButton.appendTo(inputGroupAddon);
 
 		var addItemToList = function() {
-			if(_this.htmlAllowed) {
-				var item = input.val();
-			} else {
-				var item = MultiBox.escapeHTML(input.val());
-			}
-			if(_this.trim) {
-				item = item.trim();
-			}
-			if (_this.addItem(item)) {
+			if (_this.addItem(input.val())) {
 				_this.generate();
 			}
 		};
