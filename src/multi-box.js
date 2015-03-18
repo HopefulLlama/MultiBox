@@ -1,5 +1,6 @@
 var $instances = 0;
 function MultiBox(properties) {
+	MultiBox.versionNumber = "1.0.1";
 	MultiBox.escapeHTML = function(str) {
     	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	};
@@ -22,7 +23,7 @@ function MultiBox(properties) {
 			}
 		}
 		if(!this.htmlAllowed) {
-			item = MultiBox.escapeHTML(input.val());
+			item = MultiBox.escapeHTML(item);
 		}
 		if(this.trim) {
 			item = item.trim();
@@ -47,7 +48,6 @@ function MultiBox(properties) {
 	};
 
 	this.removeItemByIndex = function(index) {
-		console.log(this.items, index);
 		this.items.splice(index, 1);
 	};
 
