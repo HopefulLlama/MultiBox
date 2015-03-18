@@ -1,6 +1,6 @@
 var $instances = 0;
 function MultiBox(properties) {
-	MultiBox.versionNumber = "1.0.1";
+	MultiBox.versionNumber = "1.0.2";
 	MultiBox.escapeHTML = function(str) {
     	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	};
@@ -10,12 +10,17 @@ function MultiBox(properties) {
 
 	this.name = (typeof properties.name != 'undefined') ? properties.name : "multiBox-" + this.instance;
 	this.cssClasses = (typeof properties.cssClasses != 'undefined') ? properties.cssClasses : "";
-	this.items = (typeof properties.items != 'undefined') ? properties.items : [];
-	this.duplicateAllowed = (typeof properties.duplicateAllowed != 'undefined') ? properties.duplicateAllowed : false;
+	this.items = (typeof properties.items != 'undefined') ? properties.items : [];	
 	this.htmlAllowed = (typeof properties.htmlAllowed != 'undefined') ? properties.htmlAllowed : false;
 	this.blankItemAllowed = (typeof properties.blankItemAllowed != 'undefined') ? properties.blankItemAllowed : false;
 	this.trim = (typeof properties.trim != 'undefined') ? properties.trim : true;
 
+	this.duplicate = {};
+	if (properties.duplicate) {
+		this.duplicate.allowed = (typeof properties.duplicate.allowed != 'undefined') ? properties.duplicate.allowed : false;
+		this.duplicate.ignoreCase = (typeof properties.duplicate.ignoreCase != 'undefined') ? properties.duplicate.ignoreCase : true;
+	}
+	
 	this.addItem = function(item) {
 		if(!this.blankItemAllowed) {
 			if(item.trim() === "") {
@@ -28,14 +33,20 @@ function MultiBox(properties) {
 		if(this.trim) {
 			item = item.trim();
 		}
-		if (this.duplicateAllowed) {
+		if (this.duplicate.allowed) {
 			this.items.push(item);
 			return true;
 		} else {
 			var duplicateFound = false;
 			for (var i = 0; i < this.items.length; i++) {
-				if (this.items[i] === item) {
-					duplicateFound = true;
+				if (this.duplicate.ignoreCase) {
+					if (this.items[i].toUpperCase() === item.toUpperCase()) {
+						duplicateFound = true;
+					} 
+				} else {
+					if (this.items[i] === item) {
+						duplicateFound = true;
+					}
 				}
 			}
 			if (!duplicateFound) {
