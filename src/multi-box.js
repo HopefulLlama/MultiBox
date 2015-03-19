@@ -1,6 +1,6 @@
 var $instances = 0;
 function MultiBox(properties) {
-	MultiBox.versionNumber = "1.0.2";
+	MultiBox.versionNumber = "1.0.3";
 	MultiBox.escapeHTML = function(str) {
     	return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 	};
@@ -118,5 +118,6 @@ function MultiBox(properties) {
 				addItemToList();
 			}
 		});
+		input.focus();
 	};
 }
